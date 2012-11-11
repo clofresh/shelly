@@ -1,0 +1,173 @@
+<!DOCTYPE html>
+<html>
+<head>
+  <meta http-equiv='content-type' value='text/html;charset=utf8'>
+  <meta name='generator' value='Ronn/v0.7.3 (http://github.com/rtomayko/ronn/tree/0.7.3)'>
+  <title>shelly(1) - shelly(1)</title>
+  <style type='text/css' media='all'>
+  /* style: man */
+  body#manpage {margin:0}
+  .mp {max-width:100ex;padding:0 9ex 1ex 4ex}
+  .mp p,.mp pre,.mp ul,.mp ol,.mp dl {margin:0 0 20px 0}
+  .mp h2 {margin:10px 0 0 0}
+  .mp > p,.mp > pre,.mp > ul,.mp > ol,.mp > dl {margin-left:8ex}
+  .mp h3 {margin:0 0 0 4ex}
+  .mp dt {margin:0;clear:left}
+  .mp dt.flush {float:left;width:8ex}
+  .mp dd {margin:0 0 0 9ex}
+  .mp h1,.mp h2,.mp h3,.mp h4 {clear:left}
+  .mp pre {margin-bottom:20px}
+  .mp pre+h2,.mp pre+h3 {margin-top:22px}
+  .mp h2+pre,.mp h3+pre {margin-top:5px}
+  .mp img {display:block;margin:auto}
+  .mp h1.man-title {display:none}
+  .mp,.mp code,.mp pre,.mp tt,.mp kbd,.mp samp,.mp h3,.mp h4 {font-family:monospace;font-size:14px;line-height:1.42857142857143}
+  .mp h2 {font-size:16px;line-height:1.25}
+  .mp h1 {font-size:20px;line-height:2}
+  .mp {text-align:justify;background:#fff}
+  .mp,.mp code,.mp pre,.mp pre code,.mp tt,.mp kbd,.mp samp {color:#131211}
+  .mp h1,.mp h2,.mp h3,.mp h4 {color:#030201}
+  .mp u {text-decoration:underline}
+  .mp code,.mp strong,.mp b {font-weight:bold;color:#131211}
+  .mp em,.mp var {font-style:italic;color:#232221;text-decoration:none}
+  .mp a,.mp a:link,.mp a:hover,.mp a code,.mp a pre,.mp a tt,.mp a kbd,.mp a samp {color:#0000ff}
+  .mp b.man-ref {font-weight:normal;color:#434241}
+  .mp pre {padding:0 4ex}
+  .mp pre code {font-weight:normal;color:#434241}
+  .mp h2+pre,h3+pre {padding-left:0}
+  ol.man-decor,ol.man-decor li {margin:3px 0 10px 0;padding:0;float:left;width:33%;list-style-type:none;text-transform:uppercase;color:#999;letter-spacing:1px}
+  ol.man-decor {width:100%}
+  ol.man-decor li.tl {text-align:left}
+  ol.man-decor li.tc {text-align:center;letter-spacing:4px}
+  ol.man-decor li.tr {text-align:right;float:right}
+  </style>
+</head>
+<!--
+  The following styles are deprecated and will be removed at some point:
+  div#man, div#man ol.man, div#man ol.head, div#man ol.man.
+
+  The .man-page, .man-decor, .man-head, .man-foot, .man-title, and
+  .man-navigation should be used instead.
+-->
+<body id='manpage'>
+  <div class='mp' id='man'>
+
+  <div class='man-navigation' style='display:none'>
+    <a href="#NAME">NAME</a>
+    <a href="#SYNOPSIS">SYNOPSIS</a>
+    <a href="#DESCRIPTION">DESCRIPTION</a>
+    <a href="#EXAMPLES">EXAMPLES</a>
+  </div>
+
+  <ol class='man-decor man-head man head'>
+    <li class='tl'>shelly(1)</li>
+    <li class='tc'></li>
+    <li class='tr'>shelly(1)</li>
+  </ol>
+
+  <h1>shelly(1)</h1>
+<h2 id="NAME">NAME</h2>
+
+<p>shelly - A simple bash library to aid in configuration management</p>
+
+<h2 id="SYNOPSIS">SYNOPSIS</h2>
+
+<p><code>user</code> <var>name</var> [<var>option0</var> [<var>option1</var> [...]]]</p>
+
+<p><code>directory</code> <var>dest</var> <var>mode</var> <var>owner</var> <var>group</var></p>
+
+<p><code>file</code> <var>src</var> <var>dest</var> <var>mode</var> <var>owner</var> <var>group</var></p>
+
+<p><code>template_file</code> <var>src</var> <var>dest</var> <var>mode</var> <var>owner</var> <var>group</var>  [<var>keyval0</var> [<var>keyval1</var> [...]]]</p>
+
+<p><code>symlink</code> <var>src</var> <var>dest</var></p>
+
+<p><code>git_repo</code> <var>repo_url</var> <var>dest</var> <var>mode</var> <var>owner</var> <var>group</var></p>
+
+<p><code>python_egg</code> <var>egg0</var> [<var>egg1</var> [<var>egg2</var> [...]]]</p>
+
+<p><code>python_virtualenv</code> <var>dest</var> <var>mode</var> <var>owner</var> <var>group</var> [<var>option0</var> [<var>option1</var> [...]]]</p>
+
+<p><code>python_virtualenv_egg</code> <var>virtalenv_dest</var> <var>egg0</var> [<var>egg1</var> [<var>egg2</var> [...]]]</p>
+
+<h2 id="DESCRIPTION">DESCRIPTION</h2>
+
+<p>Function calls to idempotently configure system files and directories. Basically taking the good ideas, like file templating and idempotency, from more complicated configuration management systems and simplifying them enough to work as a standalone library of shell commands instead of a monolithic framework that eventually just calls shell commands.</p>
+
+<h2 id="EXAMPLES">EXAMPLES</h2>
+
+<p>A script to set up a supervised Flask app.</p>
+
+<pre><code>$ cat &gt; run.sh
+#!/bin/bash
+
+source shelly.sh
+
+ROOT_USER=root
+ROOT_GROUP=root
+SUPERVISOR_DIR=/etc/supervisor
+SUPERVISOR_CONFD_DIR=$SUPERVISOR_DIR/conf.d
+directory $SUPERVISOR_DIR 755 $ROOT_USER $ROOT_GROUP
+directory $SUPERVISOR_CONFD_DIR 755 $ROOT_USER $ROOT_GROUP
+directory /usr/local/var 755 $ROOT_USER $ROOT_GROUP
+
+python_egg supervisor
+
+APP_USER=web
+APP_GROUP=web
+APP_DIR=/usr/local/my_app
+APP_LOG_DIR=/usr/local/var/log
+APP_LOG=$APP_LOG_DIR/my_app.log
+VIRTUALENV_DIR=$APP_DIR/python
+APP_SRC_DIR=$APP_DIR/src
+
+user $APP_USER --system --no-create-home --disabled-password
+directory $APP_DIR 755 $APP_USER $APP_GROUP
+directory $APP_LOG_DIR 775 $ROOT_USER $APP_GROUP
+python_virtualenv $VIRTUALENV_DIR 755 $APP_USER $APP_GROUP
+python_virtualenv_egg $VIRTUALENV_DIR flask
+
+git_repo test \
+  $APP_SRC_DIR \
+  755 \
+  $APP_USER \
+  $APP_GROUP
+
+template_file supervisor-my-app.conf \
+  $SUPERVISOR_DIR/supervisor-my-app.conf \
+  644 \
+  $ROOT_USER \
+  $ROOT_GROUP \
+  APP_NAME=my_app \
+  APP_HOME=$APP_SRC_DIR \
+  APP_USER=$APP_USER \
+  VIRTUALENV_DIR=$VIRTUALENV_DIR \
+  APP_LOG=$APP_LOG
+
+
+$ cat &gt; supervisor-my-app.conf
+[program:$APP_NAME]
+directory=$APP_HOME
+user=$APP_USER
+command=$VIRTUALENV_DIR/bin/python $APP_HOME/my_app.py
+autostart=true
+autorestart=true
+redirect_stderr=true
+stdout_logfile=$APP_LOG
+</code></pre>
+
+<p>Running sudo ./run.sh will set up the application and have the same end state
+regardless of how many times you run the script. This is what we mean by
+idempotent. If you wish to ensure that the configuration stays put, similar to other config management systems, you could set up a simple cronjob to run the
+script periodically.</p>
+
+
+  <ol class='man-decor man-foot man foot'>
+    <li class='tl'></li>
+    <li class='tc'>November 2012</li>
+    <li class='tr'>shelly(1)</li>
+  </ol>
+
+  </div>
+</body>
+</html>
