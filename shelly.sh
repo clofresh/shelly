@@ -1,3 +1,19 @@
+user() {
+  NAME=$1
+  shift
+  OPTIONS=$@
+  if [ "x$NAME" == "x" ]
+  then
+    echo "No user specified"
+    return 1
+  fi
+  if ! id $NAME > /dev/null 2>&1
+  then
+    adduser $OPTIONS $NAME
+    echo "Created user: $NAME ($OPTIONS)"
+  fi
+}
+
 directory() {
   DIR=$1
   MODE=$2
